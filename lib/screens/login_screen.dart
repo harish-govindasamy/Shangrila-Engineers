@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       shadows: [
                         Shadow(
                           blurRadius: 10.0,
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withAlpha(76),
                           offset: const Offset(5.0, 5.0),
                         ),
                       ],
@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     'Project Management',
                     style: TextStyle(
                       fontSize: 24.0,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withAlpha(204),
                     ),
                   ),
                   const SizedBox(height: 48.0),
@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderSide: const BorderSide(color: Colors.white),
                       ),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.1),
+                      fillColor: Colors.white.withAlpha(25),
                     ),
                     style: const TextStyle(color: Colors.white),
                     validator: (value) {
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderSide: const BorderSide(color: Colors.white),
                       ),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.1),
+                      fillColor: Colors.white.withAlpha(25),
                     ),
                     style: const TextStyle(color: Colors.white),
                     obscureText: true,
@@ -169,7 +169,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final authService = Provider.of<AuthService>(context, listen: false);
     final userService = Provider.of<UserService>(context, listen: false);
-    final messenger = ScaffoldMessenger.of(context);
 
     try {
       await authService.signInWithEmailAndPassword(
@@ -194,20 +193,24 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           }
         } catch (creationError) {
-          messenger.showSnackBar(
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(creationError.toString()),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(creationError.toString()),
+              content: Text(e.message ?? 'An error occurred'),
               backgroundColor: Colors.red,
             ),
           );
         }
-      } else {
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(e.message ?? 'An error occurred'),
-            backgroundColor: Colors.red,
-          ),
-        );
       }
     } finally {
       if (mounted) {

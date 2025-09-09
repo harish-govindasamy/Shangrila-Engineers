@@ -38,7 +38,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.description),
-            onPressed: () => _generateExcelReport(context),
+            onPressed: () => _generateExcelReport(),
             tooltip: 'Generate Excel Report',
           ),
         ],
@@ -168,7 +168,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           pw.SizedBox(height: 20),
           pw.Text('Tasks', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
           pw.SizedBox(height: 10),
-          pw.Table.fromTextArray(
+          pw.TableHelper.fromTextArray(
             headers: ['Task', 'Description', 'Status'],
             data: _tasks
                 .map((task) => [task.name, task.description, task.isCompleted ? 'Completed' : 'Incomplete'])
@@ -187,28 +187,29 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     );
   }
 
-  Future<void> _generateExcelReport(BuildContext context) async {
+  Future<void> _generateExcelReport() async {
     final excel = Excel.createExcel();
     final sheet = excel['Sheet1'];
 
-    sheet.cell(CellIndex.indexByString('A1')).value = widget.project.name;
-    sheet.cell(CellIndex.indexByString('A2')).value = widget.project.description;
+    sheet.cell(CellIndex.indexByString('A1')).value = TextCellValue(widget.project.name);
+    sheet.cell(CellIndex.indexByString('A2')).value = TextCellValue(widget.project.description);
 
-    sheet.cell(CellIndex.indexByString('A4')).value = 'Task';
-    sheet.cell(CellIndex.indexByString('B4')).value = 'Description';
-    sheet.cell(CellIndex.indexByString('C4')).value = 'Status';
+    sheet.cell(CellIndex.indexByString('A4')).value = TextCellValue('Task');
+    sheet.cell(CellIndex.indexByString('B4')).value = TextCellValue('Description');
+    sheet.cell(CellIndex.indexByString('C4')).value = TextCellValue('Status');
 
     for (var i = 0; i < _tasks.length; i++) {
       final task = _tasks[i];
-      sheet.cell(CellIndex.indexByString('A${i + 5}')).value = task.name;
-      sheet.cell(CellIndex.indexByString('B${i + 5}')).value = task.description;
-      sheet.cell(CellIndex.indexByString('C${i + 5}')).value = task.isCompleted ? 'Completed' : 'Incomplete';
+      sheet.cell(CellIndex.indexByString('A${i + 5}')).value = TextCellValue(task.name);
+      sheet.cell(CellIndex.indexByString('B${i + 5}')).value = TextCellValue(task.description);
+      sheet.cell(CellIndex.indexByString('C${i + 5}')).value = TextCellValue(task.isCompleted ? 'Completed' : 'Incomplete');
     }
 
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/${widget.project.name}_report.xlsx');
     await file.writeAsBytes(excel.encode()!);
 
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Excel report saved to ${file.path}'),

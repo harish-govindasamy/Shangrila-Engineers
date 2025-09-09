@@ -72,22 +72,26 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
       setState(() {
         _isLoading = true;
       });
-      final messenger = ScaffoldMessenger.of(context);
+
       try {
         final authService = Provider.of<AuthService>(context, listen: false);
         await authService.sendPasswordResetEmail(_emailController.text);
-        messenger.showSnackBar(
-          const SnackBar(
-            content: Text('Password reset link sent to your email.'),
-          ),
-        );
-        Navigator.of(context).pop();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Password reset link sent to your email.'),
+            ),
+          );
+          Navigator.of(context).pop();
+        }
       } catch (e) {
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.toString()),
+            ),
+          );
+        }
       } finally {
         if (mounted) {
           setState(() {
