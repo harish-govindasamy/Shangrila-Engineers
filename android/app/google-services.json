@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "86068035702",
+    "project_id": "shangrila-engineers",
+    "storage_bucket": "shangrila-engineers.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86068035702:android:af8d76ff9ec33f37d25f57",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZLFE45AB03LpiT5tZbdLtln22irbpmns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

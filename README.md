@@ -1,16 +1,30 @@
-# myapp
+# Shangri-La Project Management App
 
-A new Flutter project.
+This is a simple project management app built with Flutter and Firebase.
+
+## Features
+
+* Create, Read, Update, and Delete Projects
+* Create, Read, and Update Tasks within a project
+* Mark tasks as complete
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1.  **Clone the repository:**
 
-A few resources to get you started if this is your first Flutter project:
+    ```bash
+    git clone https://github.com/your-username/shangrila.git
+    ```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2.  **Set up Firebase:**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    *   Create a new Firebase project.
+    *   Add a new Android or iOS app to your Firebase project.
+    *   Follow the instructions to add the `google-services.json` (for Android) or `GoogleService-Info.plist` (for iOS) file to your project.
+
+3.  **Run the app:**
+
+    ```bash
+    flutter pub get
+    flutter run
+    ```
