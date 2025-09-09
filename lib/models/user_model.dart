@@ -1,37 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shangrila/models/user_role.dart';
 
-class UserModel {
+class AppUser {
   final String uid;
-  final String name;
   final String email;
-  final UserRole role;
+  final String displayName;
+  final String role;
 
-  UserModel({
+  AppUser({
     required this.uid,
-    required this.name,
     required this.email,
+    required this.displayName,
     required this.role,
   });
 
-  factory UserModel.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    return UserModel(
+  factory AppUser.fromFirestore(DocumentSnapshot doc) {
+    Map data = doc.data() as Map<String, dynamic>;
+    return AppUser(
       uid: doc.id,
-      name: data['name'] ?? '',
       email: data['email'] ?? '',
-      role: UserRole.values.firstWhere(
-        (e) => e.toString() == 'UserRole.${data['role']}',
-        orElse: () => UserRole.employee,
-      ),
+      displayName: data['displayName'] ?? '',
+      role: data['role'] ?? 'employee',
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      'name': name,
       'email': email,
-      'role': role.toString().split('.').last,
+      'displayName': displayName,
+      'role': role,
     };
   }
 }

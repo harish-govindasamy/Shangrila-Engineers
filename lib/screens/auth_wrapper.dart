@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shangrila/models/user_model.dart';
-import 'package:shangrila/models/user_role.dart';
 import 'package:shangrila/screens/dashboard_screen.dart';
 import 'package:shangrila/screens/login_screen.dart';
 import 'package:shangrila/screens/timesheet_screen.dart';
@@ -19,10 +18,10 @@ class AuthWrapper extends StatelessWidget {
       return const LoginScreen();
     }
 
-    return StreamProvider<UserModel?>.value(
+    return StreamProvider<AppUser?>.value(
       value: Provider.of<UserService>(context).getUser(firebaseUser.uid),
       initialData: null,
-      child: Consumer<UserModel?>(
+      child: Consumer<AppUser?>(
         builder: (context, user, child) {
           if (user == null) {
             return const Scaffold(
@@ -32,11 +31,13 @@ class AuthWrapper extends StatelessWidget {
             );
           }
           switch (user.role) {
-            case UserRole.admin:
-            case UserRole.principal:
+            case 'admin':
+            case 'principal':
               return const DashboardScreen();
-            case UserRole.employee:
+            case 'employee':
               return const TimesheetScreen();
+            default:
+              return const LoginScreen(); // Or a default screen
           }
         },
       ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shangrila/models/project_model.dart';
@@ -6,7 +7,7 @@ import 'package:shangrila/screens/user_management_screen.dart';
 import 'package:shangrila/services/auth_service.dart';
 import 'package:shangrila/services/firestore_service.dart';
 import 'package:shangrila/screens/add_project_screen.dart';
-import 'package:shangrila/screens/project_details_screen.dart';
+import 'package:shangrila/screens/project_detail_screen.dart';
 import 'package:shangrila/services/user_service.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final authService = Provider.of<AuthService>(context, listen: false);
     final userService = Provider.of<UserService>(context, listen: false);
     final firestoreService = Provider.of<FirestoreService>(context);
+    final user = Provider.of<User?>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -53,12 +55,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StreamBuilder<UserModel?>(
-              stream: userService.getUser(authService.authStateChanges.first.toString()),
+            StreamBuilder<AppUser?>(
+              stream: userService.getUser(user!.uid),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Text(
-                    'Welcome, ${snapshot.data!.name}!',
+                    'Welcome, ${snapshot.data!.displayName}!',
                     style: Theme.of(context).textTheme.headlineSmall,
                   );
                 } else {
@@ -137,7 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProjectDetailsScreen(
+                                builder: (context) => ProjectDetailScreen(
                                   project: project,
                                 ),
                               ),

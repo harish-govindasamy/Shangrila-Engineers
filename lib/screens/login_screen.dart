@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shangrila/models/user_model.dart';
-import 'package:shangrila/models/user_role.dart';
 import 'package:shangrila/screens/password_reset_screen.dart';
 import 'package:shangrila/services/auth_service.dart';
 import 'package:shangrila/services/user_service.dart';
@@ -184,11 +183,11 @@ class _LoginScreenState extends State<LoginScreen> {
           );
           if (user != null) {
             await userService.createUser(
-              UserModel(
+              AppUser(
                 uid: user.uid,
-                name: '',
+                displayName: '',
                 email: user.email!,
-                role: UserRole.employee,
+                role: 'employee',
               ),
             );
           }

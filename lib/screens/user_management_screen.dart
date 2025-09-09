@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shangrila/models/user_model.dart';
-import 'package:shangrila/models/user_role.dart';
 import 'package:shangrila/services/user_service.dart';
 
 class UserManagementScreen extends StatelessWidget {
@@ -14,10 +13,10 @@ class UserManagementScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('User Management'),
       ),
-      body: StreamProvider<List<UserModel>>.value(
+      body: StreamProvider<List<AppUser>>.value(
         value: userService.getUsers(),
         initialData: const [],
-        child: Consumer<List<UserModel>>(
+        child: Consumer<List<AppUser>>(
           builder: (context, users, child) {
             if (users.isEmpty) {
               return const Center(
@@ -39,7 +38,7 @@ class UserManagementScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          user.name.isNotEmpty ? user.name : 'No Name',
+                          user.displayName.isNotEmpty ? user.displayName : 'No Name',
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8.0),
@@ -52,15 +51,15 @@ class UserManagementScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text('Role:', style: TextStyle(fontWeight: FontWeight.bold)),
-                            DropdownButton<UserRole>(
+                            DropdownButton<String>(
                               value: user.role,
-                              items: UserRole.values.map((UserRole role) {
-                                return DropdownMenuItem<UserRole>(
-                                  value: role,
-                                  child: Text(role.toString().split('.').last),
+                              items: <String>['admin', 'principal', 'employee'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
                                 );
                               }).toList(),
-                              onChanged: (UserRole? newRole) {
+                              onChanged: (String? newRole) {
                                 if (newRole != null) {
                                   userService.updateUserRole(user.uid, newRole);
                                 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shangrila/models/project_model.dart';
 import 'package:shangrila/models/task_model.dart';
+import 'package:shangrila/models/user_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db;
@@ -60,5 +61,30 @@ class FirestoreService {
         .collection('tasks')
         .doc(taskId)
         .delete();
+  }
+
+  // User functions
+  Future<AppUser?> getUserByEmail(String email) async {
+    final snapshot = await _db
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      return null;
+    }
+    return AppUser.fromFirestore(snapshot.docs.first);
+  }
+
+  Stream<List<AppUser>> getUsers(List<String> uids) {
+    if (uids.isEmpty) {
+      return Stream.value([]);
+    }
+    return _db
+        .collection('users')
+        .where(FieldPath.documentId, whereIn: uids)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => AppUser.fromFirestore(doc)).toList());
   }
 }

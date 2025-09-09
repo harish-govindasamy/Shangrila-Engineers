@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shangrila/providers.dart';
-import 'package:shangrila/routes.dart';
+import 'package:provider/provider.dart';
+import 'package:shangrila/screens/project_list_screen.dart';
+import 'package:shangrila/services/firestore_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -17,14 +19,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppProviders(
+    return Provider<FirestoreService>(
+      create: (_) => FirestoreService(FirebaseFirestore.instance),
       child: MaterialApp(
         title: 'Shangri-La',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: '/',
-        routes: routes,
+        home: const ProjectListScreen(),
       ),
     );
   }
